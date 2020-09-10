@@ -30,8 +30,7 @@ class Main extends PluginBase {
 			$this->getLogger()->info("Config Not Found! Creating new config...");
 			$this->saveDefaultConfig();
 		}
-		$this->cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
-		$this->cfg = $this->cfg->getAll();
+		$this->cfg = $this->getConfig()->getAll();
 		if($this->cfg["version"] < self::VERSION){
 			$this->getLogger()->error("Config Version is outdated! Please delete your current config file!");
 			$this->getServer()->getPluginManager()->disablePlugin($this);
@@ -67,6 +66,7 @@ class Main extends PluginBase {
 	        $player->getInventory()->addItem($orespa);
 	        return true;
 	    }
+	    return false;
 	}
 	
 	public function createOreSpawner(string $ore, int $amount) {
