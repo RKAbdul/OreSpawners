@@ -18,9 +18,9 @@ use pocketmine\item\ItemFactory;
 
 class Main extends PluginBase {
     
-    public const VERSION = 1
+  public const VERSION = 1
     
-	private $cfg;
+	private $cfg
 	
 	public function onEnable(){
 		if(!file_exists($this->getDataFolder())){
@@ -45,11 +45,11 @@ class Main extends PluginBase {
 	            $sender->sendMessage(TF::RED . "You do not have permission to use this command!");
 	            return false;
 	        }
-	        if(!isset($args[0])){
-	            $sender->sendMessage(TF::RED . "You must provide some arguments!");
-			    return false;
+	        f(!isset($args[0])){
+	                $sender->sendMessage(TF::RED . "You must provide some arguments!");
+			return false;
 	        } else if(isset($args[2]) && !$this->getServer()->getPlayer($args[2])){
-		    $sender->sendMessage(TF::RED . "You must provide a valid player!");
+			$sender->sendMessage(TF::RED . "You must provide a valid player!");
 		    	return false;
 	    	} else if(!isset($args[0]) || !in_array(strtolower($args[0]), $typesArray)){
 		    	$sender->sendMessage(TF::RED . "You must enter a valid ore type!");
@@ -60,7 +60,7 @@ class Main extends PluginBase {
 	    	};
 	    	$player = isset($args[2]) ? $this->getServer()->getPlayer($args[2]) : $sender;
 	    	if (!$player instanceof Player) return false;
-	        $ore = strtolower($args[0]);
+		$ore = strtolower($args[0]);
 	    	$amount = isset($args[1]) ? intval($args[1]) : 1;
 	    	$orespa = $this->createOreSpawner($ore, $amount);
 	        $player->getInventory()->addItem($orespa);
@@ -73,7 +73,7 @@ class Main extends PluginBase {
 	    $gen = $this->cfg["ore-generator-blocks"][$ore];
 	    $gencreated = ItemFactory::get(intval($gen), 0, $amount);
 	    $name = str_replace(["{ore}", "&"], [$ore, "§"], $this->cfg["ore-generators-name"] ?? "&a$ore ore spawner") ;
-            $gencreated->setCustomName($name);
+	    $gencreated->setCustomName($name);
 	    $lore = str_replace(["{ore}", "&"], [$ore, "§"], $this->cfg["ore-generators-lore"] ?? "Place it down, and ore blocks will spawn above it");
             $gencreated->setLore([$lore]);
 	    return $gencreated;
