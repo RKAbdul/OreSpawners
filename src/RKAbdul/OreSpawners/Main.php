@@ -45,7 +45,7 @@ class Main extends PluginBase {
 	            $sender->sendMessage(TF::RED . "You do not have permission to use this command!");
 	            return false;
 	        }
-	        f(!isset($args[0])){
+	        if(!isset($args[0])){
 	                $sender->sendMessage(TF::RED . "You must provide some arguments!");
 			return false;
 	        } else if(isset($args[2]) && !$this->getServer()->getPlayer($args[2])){
