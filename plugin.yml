@@ -1,0 +1,11 @@
+name: OreSpawners
+version: 0.1
+main: RKAbdul\OreSpawners\Main
+api: 3.0.0
+
+commands:
+ orespawner:
+  description: Give ore spawner.
+  usage: "/orespawner [ore] [amount] [player]"
+  aliases: ["os"]
+  permission: "orespawner.give"

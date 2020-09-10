@@ -1,0 +1,31 @@
+#Internal use only, DO-NOT CHANGE;
+version: 1
+
+#  ____  _  __    _    _         _       _  
+# |  _ \| |/ /   / \  | |__   __| |_   _| |
+# | |_) | ' /   / _ \ | '_ \ / _` | | | | |
+# |  _ <| . \  / ___ \| |_) | (_| | |_| | |
+# |_| \_\_|\_\/_/   \_\_.__/ \__,_|\__,_|_|
+#
+
+
+ore-generator-blocks:
+  #Blocks that will spawn ore
+  #Format: "ID"
+  coal: "232"
+  iron: "228"
+  gold: "224"
+  diamond: "223"
+  emerald: "225"
+  lapiz: "231"
+  redstone: "234"
+#Name that will give be given to each ore spawner
+#use {ore} for the ore type
+ore-generators-name: "§a{ore} ore spawner"
+
+#Lore that will give be given to each ore spawner
+#use {ore} for the ore type
+ore-generators-lore: "Place it down, and ore blocks will spawn on top"
+
+#Time Delay you want in seconds, in each ore spawn
+delay: "2"
