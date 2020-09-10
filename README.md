@@ -1,4 +1,5 @@
 # OreSpawners
+[![Discord Chat](https://img.shields.io/discord/490677165289897995.svg)](https://discord.gg/M7FA5D3)
 A pocketmine plugin, for adding OreSpawners a.k.a OreGens to your server.
 # Installation
 Download the plugin from poggit release and/or poggit CI
