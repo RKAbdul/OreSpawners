@@ -77,28 +77,28 @@ class EventListener implements Listener{
 	    $redstoneid = intval($this->cfg["ore-generator-blocks"]["redstone"]);
 	    switch ($bbid) {
 	        case $coalid:
-	            $this->ore = Block::get(Block::COAL_ORE);
+	            $ore = Block::get(Block::COAL_ORE);
 	            break;
 	        case $ironid:
-	            $this->ore = Block::get(Block::IRON_ORE);
+	            $ore = Block::get(Block::IRON_ORE);
 	            break;
 	        case $goldid:
-	            $this->ore = Block::get(Block::GOLD_ORE);
+	            $ore = Block::get(Block::GOLD_ORE);
 	            break;
 	        case $diamondid:
-	            $this->ore = Block::get(Block::DIAMOND_ORE);
+	            $ore = Block::get(Block::DIAMOND_ORE);
 	            break;
 	        case $emeraldid:
-	            $this->ore = Block::get(Block::EMERALD_ORE);
+	            $ore = Block::get(Block::EMERALD_ORE);
 	            break;
 	        case $lapizid:
-	            $this->ore = Block::get(Block::LAPIS_ORE);
+	            $ore = Block::get(Block::LAPIS_ORE);
 	            break;
 	        case $redstoneid:
-	            $this->ore = Block::get(Block::REDSTONE_ORE);
+	            $ore = Block::get(Block::REDSTONE_ORE);
 	            break;
 	    }
-	    return $this->ore;
+	    return $ore;
     }
 }
 
