@@ -17,7 +17,7 @@ ore-generator-blocks:
   gold: "224"
   diamond: "223"
   emerald: "225"
-  lapiz: "231"
+  lapis: "231"
   redstone: "234"
 #Name that will give be given to each ore spawner
 #use {ore} for the ore type
