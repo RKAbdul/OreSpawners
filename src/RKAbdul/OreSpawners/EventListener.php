@@ -71,7 +71,7 @@ class EventListener implements Listener{
 	    $goldid = intval($this->cfg["ore-generator-blocks"]["gold"]);
 	    $diamondid = intval($this->cfg["ore-generator-blocks"]["diamond"]);
 	    $emeraldid = intval($this->cfg["ore-generator-blocks"]["emerald"]);
-	    $lapizid = intval($this->cfg["ore-generator-blocks"]["lapiz"]);
+	    $lapizid = intval($this->cfg["ore-generator-blocks"]["lapis"]);
 	    $redstoneid = intval($this->cfg["ore-generator-blocks"]["redstone"]);
 	    switch ($bbid) {
 	        case $coalid:
