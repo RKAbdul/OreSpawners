@@ -1,7 +1,7 @@
 # OreSpawners
 [![Discord Chat](https://img.shields.io/discord/490677165289897995.svg)](https://discord.gg/M7FA5D3)
 [![](https://poggit.pmmp.io/shield.state/OreSpawners)](https://poggit.pmmp.io/p/OreSpawners)
-[![HitCount](http://hits.dwyl.com/RKAbdul/OreSpawners.svg)](http://hits.dwyl.com/RKAbdul/OreSpawners)
+[![](http://hits.xenoservers.net:4000/RKAbdul/OreSpawners.svg)]
 
 A pocketmine plugin, for adding OreSpawners a.k.a OreGens to your server.
 # Installation
