@@ -18,7 +18,7 @@ use pocketmine\item\Item;
 use pocketmine\item\ItemFactory;
 
 class Main extends PluginBase {
-        public const VERSION = 1;
+        public const VERSION = 2;
     
 	private $cfg;
 	
