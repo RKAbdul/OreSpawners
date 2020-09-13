@@ -44,7 +44,7 @@ class EventListener implements Listener{
 						$this->plugin->getScheduler()->scheduleDelayedTask(new ClosureTask( function (int $currentTick) use ($event, $ore): void {
 							if ($event->getBlock()->getLevel() !== null){
 								$event->getBlock()->getLevel()->setBlock($event->getBlock()->floor(), $ore, false, true);
-								if ($this->cfg["fizz-sound"] = true) $event->getBlock()->getLevel()->addSound(new FizzSound($event->getBlock()->asVector3()));
+								if ($this->cfg["fizz-sound"] == true) $event->getBlock()->getLevel()->addSound(new FizzSound($event->getBlock()->asVector3()));
 							}
 						}), 20 * intval($this->cfg["delay"]));
 					}
@@ -52,8 +52,8 @@ class EventListener implements Listener{
 	}
     
     public function checkBlock(Block $bbelow) {
-        $bbid = $bbelow->getID();
-        $coalid = intval($this->cfg["ore-generator-blocks"]["coal"]);
+            $bbid = $bbelow->getID();
+            $coalid = intval($this->cfg["ore-generator-blocks"]["coal"]);
 	    $ironid = intval($this->cfg["ore-generator-blocks"]["iron"]);
 	    $goldid = intval($this->cfg["ore-generator-blocks"]["gold"]);
 	    $diamondid = intval($this->cfg["ore-generator-blocks"]["diamond"]);
