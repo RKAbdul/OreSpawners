@@ -1,5 +1,5 @@
 #Internal use only, DO-NOT CHANGE;
-version: 1
+version: 2
 
 #  ____  _  __    _    _         _       _  
 # |  _ \| |/ /   / \  | |__   __| |_   _| |
@@ -26,6 +26,10 @@ ore-generators-name: "§a{ore} ore spawner"
 #Lore that will give be given to each ore spawner
 #use {ore} for the ore type
 ore-generators-lore: "Place it down, and ore blocks will spawn on top"
+
+#Wether to generate a sound when a ore generates or nah
+#Default is true
+fizz-sound: true
 
 #Time Delay you want in seconds, in each ore spawn
 delay: "2"
