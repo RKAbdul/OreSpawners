@@ -12,6 +12,7 @@ use pocketmine\Server;
 use pocketmine\utils\Config;
 use pocketmine\item\Item;
 use pocketmine\event\block\BlockUpdateEvent;
+use pocketmine\level\sound\FizzSound;
 use pocketmine\block\Block;
 
 class EventListener implements Listener{
@@ -43,6 +44,7 @@ class EventListener implements Listener{
 						$this->plugin->getScheduler()->scheduleDelayedTask(new ClosureTask( function (int $currentTick) use ($event, $ore): void {
 							if ($event->getBlock()->getLevel() !== null){
 								$event->getBlock()->getLevel()->setBlock($event->getBlock()->floor(), $ore, false, true);
+								if ($this->cfg["fizz-sound"] = true) $event->getBlock()->getLevel()->addSound(new FizzSound($event->getBlock()->asVector3()));
 							}
 						}), 20 * intval($this->cfg["delay"]));
 					}
