@@ -11,8 +11,7 @@ use pocketmine\math\Vector3;
 use pocketmine\Server;
 use pocketmine\utils\Config;
 use pocketmine\item\Item;
-use pocketmine\event\block\BlockBreakEvent;
-use pocketmine\event\block\BlockPlaceEvent;
+use pocketmine\event\block\BlockUpdateEvent;
 use pocketmine\block\Block;
 
 class EventListener implements Listener{
@@ -28,43 +27,27 @@ class EventListener implements Listener{
         $this->plugin = $plugin;
         $this->cfg = $this->plugin->getConfig()->getAll();
     }
-    
-    public function onBlockBreak(BlockBreakEvent $event){
+	
+	public function onBlockUpdate(BlockUpdateEvent $event){
         $block = $event->getBlock();
-        $bbelow = $event->getPlayer()->getLevel()->getBlock($event->getBlock()->floor()->down(1));
+        $bbelow = $block->getLevel()->getBlock($event->getBlock()->floor()->down(1));
         $blocks = [];
-        foreach(array_values($this->plugin->getConfig()->get("ore-generator-blocks")) as $blockID){
-            array_push($blocks, $blockID);
-        };
-        if (in_array($bbelow->getId(), $blocks)) {
-            $ore = $this->checkBlock($bbelow);
-            if (!$event->isCancelled()) {
-                $this->plugin->getScheduler()->scheduleDelayedTask(new ClosureTask( function (int $currentTick) use ($event, $ore): void {
-                    $event->getPlayer()->getLevel()->setBlock($event->getBlock()->floor(), $ore);
-                }), 20 * intval($this->cfg["delay"]));
-            }
-        }
- 
-    }
-    
-    public function onBlockPlace(BlockPlaceEvent $event){
-        $block = $event->getBlock();
-        $babove = $event->getPlayer()->getLevel()->getBlock($event->getBlock()->floor()->up(1));
-        if ($babove->getId() == 0) {
-            $blocks = [];
-            foreach(array_values($this->plugin->getConfig()->get("ore-generator-blocks")) as $blockID){
-                array_push($blocks, $blockID);
-            };
-            if (in_array($block->getId(), $blocks)) {
-                $ore = $this->checkBlock($block);
-                if (!$event->isCancelled()) {
-                    $this->plugin->getScheduler()->scheduleDelayedTask(new ClosureTask( function (int $currentTick) use ($event, $ore): void {
-                        $event->getPlayer()->getLevel()->setBlock($event->getBlock()->floor()->up(1), $ore);
-                    }), 20 * intval($this->cfg["delay"]));
-                }
-            }
-        }
-    }
+		
+			foreach(array_values($this->plugin->getConfig()->get("ore-generator-blocks")) as $blockID){
+				array_push($blocks, $blockID);
+			};
+				if (in_array($bbelow->getId(), $blocks)) {
+					$ore = $this->checkBlock($bbelow);
+					if (!$event->isCancelled()) {
+						if ($event->getBlock()->getId() == $ore->getId()) return;
+						$this->plugin->getScheduler()->scheduleDelayedTask(new ClosureTask( function (int $currentTick) use ($event, $ore): void {
+							if ($event->getBlock()->getLevel() !== null){
+								$event->getBlock()->getLevel()->setBlock($event->getBlock()->floor(), $ore, false, true);
+							}
+						}), 20 * intval($this->cfg["delay"]));
+					}
+				}
+	}
     
     public function checkBlock(Block $bbelow) {
         $bbid = $bbelow->getID();
@@ -101,4 +84,3 @@ class EventListener implements Listener{
 	    return $ore;
     }
 }
-
