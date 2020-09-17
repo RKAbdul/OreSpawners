@@ -8,6 +8,7 @@ use pocketmine\Player;
 use pocketmine\Server;
 use pocketmine\event\Listener;
 use pocketmine\event\block\BlockUpdateEvent;
+use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\item\Item;
 use pocketmine\block\Block;
@@ -15,8 +16,8 @@ use pocketmine\scheduler\ClosureTask;
 use pocketmine\math\Vector3;
 use pocketmine\level\sound\FizzSound;
 use pocketmine\utils\Config;
-use DenielWorld\EzTiles\tile\SimpleTile;
-use DenielWorld\EzTiles\data\TileInfo;
+use RKAbdul\OreSpawners\libs\DenielWorld\EzTiles\tile\SimpleTile;
+use RKAbdul\OreSpawners\libs\DenielWorld\EzTiles\data\TileInfo;
 use pocketmine\utils\TextFormat as TF;
 
 class EventListener implements Listener{
@@ -99,6 +100,29 @@ class EventListener implements Listener{
     public function getTile(Vector3 $pos) : ?Tile {
 	    return $this->getTileAt((int) floor($pos->x), (int) floor($pos->y), (int) floor($pos->z));
     }
+	
+    public function onBlockBreak(BlockBreakEvent $event){
+        $player = $event->getPlayer();
+        $block = $event->getBlock();
+        $blocks = [];
+        foreach(array_values($this->plugin->getConfig()->get("ore-generator-blocks")) as $blockID){
+            array_push($blocks, $blockID);
+        };
+        if (!in_array($event->getBlock()->getId(), $blocks)) return;
+        $tile = $player->getLevel()->getTile($block->asVector3());
+        $type = $this->checkSpawner($block);
+        $count = $tile instanceof SimpleTile ? $tile->getData("stacked")->getValue() : 1;
+        
+        if (!$event->isCancelled()) {
+            $event->setDrops([]);
+            $orespawner = $this->plugin->createOreSpawner($type, $count);
+            if($player->getInventory()->canAddItem($orespawner)){
+                $player->getInventory()->addItem($orespawner);
+            } else {
+                $player->getLevel()->dropItem($event->getBlock()->asVector3(), $orespawner);
+            }
+        }
+    }
     
     public function checkBlock(Block $bbelow) {
         $bbid = $bbelow->getId();
@@ -130,6 +154,41 @@ class EventListener implements Listener{
 	            break;
 	        case $redstoneid:
 	            $ore = Block::get(Block::REDSTONE_ORE);
+	            break;
+	    }
+	    return $ore;
+    }
+    
+    public function checkSpawner(Block $bbelow) {
+        $bbid = $bbelow->getId();
+        $coalid = intval($this->cfg["ore-generator-blocks"]["coal"]);
+	    $ironid = intval($this->cfg["ore-generator-blocks"]["iron"]);
+	    $goldid = intval($this->cfg["ore-generator-blocks"]["gold"]);
+	    $diamondid = intval($this->cfg["ore-generator-blocks"]["diamond"]);
+	    $emeraldid = intval($this->cfg["ore-generator-blocks"]["emerald"]);
+	    $lapizid = intval($this->cfg["ore-generator-blocks"]["lapis"]);
+	    $redstoneid = intval($this->cfg["ore-generator-blocks"]["redstone"]);
+	    switch ($bbid) {
+	        case $coalid:
+	            $ore = "coal";
+	            break;
+	        case $ironid:
+	            $ore = "iron";
+	            break;
+	        case $goldid:
+	            $ore = "gold";
+	            break;
+	        case $diamondid:
+	            $ore = "diamond";
+	            break;
+	        case $emeraldid:
+	            $ore = "emerald";
+	            break;
+	        case $lapizid:
+	            $ore = "lapis";
+	            break;
+	        case $redstoneid:
+	            $ore = "redstone";
 	            break;
 	    }
 	    return $ore;
