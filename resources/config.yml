@@ -1,5 +1,5 @@
 #Internal use only, DO-NOT CHANGE;
-version: 2
+version: 3
 
 #  ____  _  __    _    _         _       _  
 # |  _ \| |/ /   / \  | |__   __| |_   _| |
@@ -21,7 +21,7 @@ ore-generator-blocks:
   redstone: "234"
 #Name that will give be given to each ore spawner
 #use {ore} for the ore type
-ore-generators-name: "§a{ore} ore spawner"
+ore-generators-name: "&a{ore} ore spawner"
 
 #Lore that will give be given to each ore spawner
 #use {ore} for the ore type
@@ -31,5 +31,14 @@ ore-generators-lore: "Place it down, and ore blocks will spawn on top"
 #Default is true
 fizz-sound: true
 
-#Time Delay you want in seconds, in each ore spawn
-delay: "2"
+#Stacking system
+stacking: true
+#Max limit of stacks on 1 orespawner
+max: 5
+#Message that will be shown when a user, stacks a orespawner
+gen-added: "&aSuccessfully stacked 1 orespawner"
+#Message that will appear when max stacking limit resched
+limit-reached: "&cYou can't stack anymore orespawners, you have reached the limit"
+#Base time Delay you want in seconds, in each ore spawn.
+#If stacking system is on. delay will nr counted as base-count devided by stacked amount.
+base-delay: "2"
