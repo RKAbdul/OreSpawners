@@ -16,8 +16,8 @@ use pocketmine\scheduler\ClosureTask;
 use pocketmine\math\Vector3;
 use pocketmine\level\sound\FizzSound;
 use pocketmine\utils\Config;
-use RKAbdul\OreSpawners\libs\DenielWorld\EzTiles\tile\SimpleTile;
-use RKAbdul\OreSpawners\libs\DenielWorld\EzTiles\data\TileInfo;
+use DenielWorld\EzTiles\tile\SimpleTile;
+use DenielWorld\EzTiles\data\TileInfo;
 use pocketmine\utils\TextFormat as TF;
 
 class EventListener implements Listener{
