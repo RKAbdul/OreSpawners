@@ -5,4 +5,7 @@ branches:
 projects:
   OreSpawners:
     path: ""
+    libs:
+    - src: DenielWorld/EzTiles/libEzTiles
+      version: ^0.1.0
 ...
