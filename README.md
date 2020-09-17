@@ -12,6 +12,10 @@ Put the .phar file, in your plugins folder and restart the server
 | command | aliases | description | permission|
 |---------|---------|-------------|-----------|
 | `/orespawner [ore] [amount] [player]` | `os` | Gives ore spawner to a player | `orespawner.give` |
+# Stacking system
+- Right click on a OreSpawner with the same type of OreSpawner in your hand.
+Stacking OreSpawners will reduce the time taken in ore spawning, we recommend keeping the `max` stack limit low
+Upon breaking a stacked OreSpawner, u you will get the amount back
 # Issues & Suggestions
 If you have any problem, questions or suggestions.
 Please join my support server [here](https://discord.gg/M7FA5D3), or open an issue.
