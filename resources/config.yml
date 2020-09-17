@@ -1,5 +1,5 @@
-#Internal use only, DO-NOT CHANGE;
-version: 2
+# Internal use only, DO-NOT CHANGE;
+version: 3
 
 #  ____  _  __    _    _         _       _  
 # |  _ \| |/ /   / \  | |__   __| |_   _| |
@@ -10,8 +10,8 @@ version: 2
 
 
 ore-generator-blocks:
-  #Blocks that will spawn ore
-  #Format: "ID"
+  # Blocks that will spawn ore
+  # Format: "ID"
   coal: "232"
   iron: "228"
   gold: "224"
@@ -19,17 +19,26 @@ ore-generator-blocks:
   emerald: "225"
   lapis: "231"
   redstone: "234"
-#Name that will give be given to each ore spawner
-#use {ore} for the ore type
-ore-generators-name: "§a{ore} ore spawner"
+# Name that will be given to each ore spawner
+# Use {ore} for the ore type
+ore-generators-name: "&a{ore} ore spawner"
 
-#Lore that will give be given to each ore spawner
-#use {ore} for the ore type
+# Lore that will be given to each ore spawner
+# Use {ore} for the ore type
 ore-generators-lore: "Place it down, and ore blocks will spawn on top"
 
-#Wether to generate a sound when a ore generates or nah
-#Default is true
+# Whether to generate a cobblestone generator like sound when an ore generates
+# Default is true
 fizz-sound: true
 
-#Time Delay you want in seconds, in each ore spawn
-delay: "2"
+# Stacking system
+stacking: true
+# Max limit of stacks on 1 orespawner
+max: 5
+# Message that will be shown when a user stacks an orespawner
+gen-added: "&aSuccessfully stacked 1 orespawner"
+# Message that will appear when max stacking limit is reached
+limit-reached: "&cYou can't stack anymore orespawners, you have reached the limit"
+# Base time delay you want in seconds in each ore spawn
+# If stacking system is on, delay will be counted as base-count divided by stacked amount
+base-delay: "2"

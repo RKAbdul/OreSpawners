@@ -16,9 +16,10 @@ use pocketmine\command\CommandSender;
 use pocketmine\command\Command;
 use pocketmine\item\Item;
 use pocketmine\item\ItemFactory;
+use DenielWorld\EzTiles\EzTiles;
 
 class Main extends PluginBase {
-        public const VERSION = 2;
+    public const VERSION = 3;
     
 	private $cfg;
 	
@@ -35,6 +36,8 @@ class Main extends PluginBase {
 			$this->getServer()->getPluginManager()->disablePlugin($this);
 		}
 		$this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
+		EzTiles::register($this);
+		EzTiles::init();
 	}
 	
 	public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool {
@@ -61,7 +64,7 @@ class Main extends PluginBase {
 	    	};
 	    	$player = isset($args[2]) ? $this->getServer()->getPlayer($args[2]) : $sender;
 	    	if (!$player instanceof Player) return false;
-		$ore = strtolower($args[0]);
+		    $ore = strtolower($args[0]);
 	    	$amount = isset($args[1]) ? intval($args[1]) : 1;
 	    	$orespa = $this->createOreSpawner($ore, $amount);
 	        $player->getInventory()->addItem($orespa);
@@ -74,9 +77,9 @@ class Main extends PluginBase {
 	    $gen = $this->cfg["ore-generator-blocks"][$ore];
 	    $gencreated = ItemFactory::get(intval($gen), 0, $amount);
 	    $name = str_replace(["{ore}", "&"], [$ore, "§"], $this->cfg["ore-generators-name"] ?? "&a$ore ore spawner") ;
-            $gencreated->setCustomName($name);
-            $lore = str_replace(["{ore}", "&"], [$ore, "§"], $this->cfg["ore-generators-lore"] ?? "Place it down, and ore blocks will spawn above it");
-            $gencreated->setLore([$lore]);
+        $gencreated->setCustomName($name);
+        $lore = str_replace(["{ore}", "&"], [$ore, "§"], $this->cfg["ore-generators-lore"] ?? "Place it down, and ore blocks will spawn above it");
+        $gencreated->setLore([$lore]);
 	    return $gencreated;
 	}
 }
