@@ -114,15 +114,14 @@ class EventListener implements Listener{
         $type = $this->checkSpawner($block);
         $count = $tile instanceof SimpleTile ? $tile->getData("stacked")->getValue() : 1;
         
-        if (!$event->isCancelled()) {
-            $event->setDrops([]);
+        if ($event->isCancelled()) return;
+	    $event->setDrops([]);
             $orespawner = $this->plugin->createOreSpawner($type, $count);
-            if($player->getInventory()->canAddItem($orespawner)){
+	    if($player->getInventory()->canAddItem($orespawner)){
                 $player->getInventory()->addItem($orespawner);
             } else {
                 $player->getLevel()->dropItem($event->getBlock()->asVector3(), $orespawner);
             }
-        }
     }
     
     public function checkBlock(Block $bbelow) {
