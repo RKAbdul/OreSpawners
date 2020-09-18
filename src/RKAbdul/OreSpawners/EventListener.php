@@ -47,6 +47,7 @@ class EventListener implements Listener{
             $ore = $this->checkBlock($bbelow);
             $delay = $this->getDelay($bbelow);
             if (!$event->isCancelled()) {
+		$event->setCancelled(true);
                 if ($event->getBlock()->getId() == $ore->getId()) return;
                 $this->plugin->getScheduler()->scheduleDelayedTask(new ClosureTask( function (int $currentTick) use ($event, $ore): void {
                     if ($event->getBlock()->getLevel() !== null){
