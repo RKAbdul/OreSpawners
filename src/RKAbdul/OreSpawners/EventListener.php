@@ -109,12 +109,12 @@ class EventListener implements Listener{
         foreach(array_values($this->plugin->getConfig()->get("ore-generator-blocks")) as $blockID){
             array_push($blocks, $blockID);
         };
+        if ($event->isCancelled()) return;
         if (!in_array($event->getBlock()->getId(), $blocks)) return;
         $tile = $player->getLevel()->getTile($block->asVector3());
         $type = $this->checkSpawner($block);
         $count = $tile instanceof SimpleTile ? $tile->getData("stacked")->getValue() : 1;
         
-        if ($event->isCancelled()) return;
 	    $event->setDrops([]);
             $orespawner = $this->plugin->createOreSpawner($type, $count);
 	    if($player->getInventory()->canAddItem($orespawner)){
