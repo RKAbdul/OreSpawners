@@ -114,14 +114,10 @@ class EventListener implements Listener{
         $tile = $player->getLevel()->getTile($block->asVector3());
         $type = $this->checkSpawner($block);
         $count = $tile instanceof SimpleTile ? $tile->getData("stacked")->getValue() : 1;
-        
-	    $event->setDrops([]);
-            $orespawner = $this->plugin->createOreSpawner($type, $count);
-	    if($player->getInventory()->canAddItem($orespawner)){
-                $player->getInventory()->addItem($orespawner);
-            } else {
-                $player->getLevel()->dropItem($event->getBlock()->asVector3(), $orespawner);
-            }
+        $orespawner = $this->plugin->createOreSpawner($type, $count);
+        $drops = new array();
+        $drops[] = $orespawner;
+	    $event->setDrops($drops);
     }
     
     public function checkBlock(Block $bbelow) {
