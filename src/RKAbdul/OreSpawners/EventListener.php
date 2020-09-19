@@ -115,7 +115,7 @@ class EventListener implements Listener{
         $type = $this->checkSpawner($block);
         $count = $tile instanceof SimpleTile ? $tile->getData("stacked")->getValue() : 1;
         $orespawner = $this->plugin->createOreSpawner($type, $count);
-        $drops = new array();
+        $drops = array();
         $drops[] = $orespawner;
 	    $event->setDrops($drops);
     }
