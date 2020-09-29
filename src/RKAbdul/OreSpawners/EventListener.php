@@ -60,7 +60,7 @@ class EventListener implements Listener{
 	}
     
     public function onPlayerInteract(PlayerInteractEvent $event) {
-        if($this->cfg["stacking"] == false) return;
+        if($this->cfg["stacking"] == false || $event->isCancelled()) return;
         $item = $event->getItem();
         $player = $event->getPlayer();
         $blocks = [];
