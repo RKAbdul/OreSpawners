@@ -73,7 +73,11 @@ class EventListener implements Listener{
             $stacked = $tile instanceof SimpleTile ? $tile->getData("stacked")->getValue() : 1;
             if (!in_array($item->getId(), $blocks) || $event->getBlock()->getId() != $item->getId()) return $player->sendMessage("§aThere are currently " . TF::YELLOW . $stacked. " §aStacked orespawners");
             if ($tile instanceof SimpleTile) {
-                if ($stacked >= intval($this->cfg["max"])) return $player->sendMessage(str_replace("&", "§", $this->cfg["limit-reached"] ?? "&cYou can't stack anymore orespawners, you have reached the limit"));
+                if ($stacked >= intval($this->cfg["max"])) {
+                    $event->setCancelled(true);
+                    $player->sendMessage(str_replace("&", "§", $this->cfg["limit-reached"] ?? "&cYou can't stack anymore orespawners, you have reached the limit"));
+                    return;
+                }
                 $tile->setData("stacked", $stacked + 1);
             } else {
                 $tileinfo = new TileInfo($event->getBlock(), ["id" => "simpleTile", "stacked" => 2]);
@@ -105,19 +109,25 @@ class EventListener implements Listener{
     public function onBlockBreak(BlockBreakEvent $event){
         $player = $event->getPlayer();
         $block = $event->getBlock();
+        $bbelow = $block->getLevel()->getBlock($event->getBlock()->floor()->down(1));
         $blocks = [];
         foreach(array_values($this->plugin->getConfig()->get("ore-generator-blocks")) as $blockID){
             array_push($blocks, $blockID);
         };
         if ($event->isCancelled()) return;
-        if (!in_array($event->getBlock()->getId(), $blocks)) return;
-        $tile = $player->getLevel()->getTile($block->asVector3());
-        $type = $this->checkSpawner($block);
-        $count = $tile instanceof SimpleTile ? $tile->getData("stacked")->getValue() : 1;
-        $orespawner = $this->plugin->createOreSpawner($type, $count);
-        $drops = array();
-        $drops[] = $orespawner;
-	    $event->setDrops($drops);
+        if (in_array($event->getBlock()->getId(), $blocks)) {
+            $tile = $player->getLevel()->getTile($block->asVector3());
+            $type = $this->checkSpawner($block);
+            $count = $tile instanceof SimpleTile ? $tile->getData("stacked")->getValue() : 1;
+            $orespawner = $this->plugin->createOreSpawner($type, $count);
+            $drops = array();
+            $drops[] = $orespawner;
+	        $event->setDrops($drops);
+        } else if (in_array($bbelow->getId(), $blocks)) {
+            if ($this->cfg["drop-xp"] == false) {
+                $event->setXpDropAmount(0);
+            }
+        }
     }
     
     public function checkBlock(Block $bbelow) {

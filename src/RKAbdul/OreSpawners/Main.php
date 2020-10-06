@@ -19,7 +19,7 @@ use pocketmine\item\ItemFactory;
 use DenielWorld\EzTiles\EzTiles;
 
 class Main extends PluginBase {
-    public const VERSION = 3;
+    public const VERSION = 4;
     
 	private $cfg;
 	
