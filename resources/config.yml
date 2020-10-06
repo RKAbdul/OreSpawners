@@ -1,5 +1,5 @@
-# Internal use only, DO-NOT CHANGE;
-version: 3
+# Internal use only, DO-NOT CHANGE
+version: 4
 
 #  ____  _  __    _    _         _       _  
 # |  _ \| |/ /   / \  | |__   __| |_   _| |
@@ -19,6 +19,7 @@ ore-generator-blocks:
   emerald: "225"
   lapis: "231"
   redstone: "234"
+
 # Name that will be given to each ore spawner
 # Use {ore} for the ore type
 ore-generators-name: "&a{ore} ore spawner"
@@ -33,12 +34,19 @@ fizz-sound: true
 
 # Stacking system
 stacking: true
+
 # Max limit of stacks on 1 orespawner
 max: 5
+
 # Message that will be shown when a user stacks an orespawner
 gen-added: "&aSuccessfully stacked 1 orespawner"
+
 # Message that will appear when max stacking limit is reached
 limit-reached: "&cYou can't stack anymore orespawners, you have reached the limit"
+
+# Drop XP when breaking ores from orespawners
+drop-xp: true
+
 # Base time delay you want in seconds in each ore spawn
 # If stacking system is on, delay will be counted as base-count divided by stacked amount
 base-delay: "2"
