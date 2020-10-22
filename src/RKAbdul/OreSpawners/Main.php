@@ -16,6 +16,7 @@ use pocketmine\command\CommandSender;
 use pocketmine\command\Command;
 use pocketmine\item\Item;
 use pocketmine\item\ItemFactory;
+use pocketmine\nbt\tag\StringTag;
 use DenielWorld\EzTiles\EzTiles;
 
 class Main extends PluginBase {
@@ -80,6 +81,7 @@ class Main extends PluginBase {
         $gencreated->setCustomName($name);
         $lore = str_replace(["{ore}", "&"], [$ore, "§"], $this->cfg["ore-generators-lore"] ?? "Place it down, and ore blocks will spawn above it");
         $gencreated->setLore([$lore]);
+        $gencreated->setNamedTagEntry(new StringTag("orespawner", "true"));
 	    return $gencreated;
 	}
 }
