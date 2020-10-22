@@ -91,18 +91,17 @@ class EventListener implements Listener{
             array_push($blocks, $blockID);
         };
         if (in_array($event->getBlock()->getId(), $blocks)) {
-            $tile = $event->getPlayer()->getLevel()->getTile($event->getBlock()->asVector3());
+            $tile = $event->getPlayer()->getLevel()->getTile($event->getBlock());
+            if (!$tile instanceof SimpleTile) return;
+            $event->setCancelled(true);
             if($player->getGamemode() == 1) return $player->sendMessage(TF::RED . "You can only use stacking system in survival");
             $stacked = $tile instanceof SimpleTile ? $tile->getData("stacked")->getValue() : 1;
-            if (!$tile instanceof SimpleTile) return;
-            if (!in_array($item->getId(), $blocks) || $event->getBlock()->getId() != $item->getId()) return $player->sendMessage("§aThere are currently " . TF::YELLOW . $stacked. " §astacked OreSpawners");
-            if ($stacked >= intval($this->cfg["max"])) {
-                $event->setCancelled(true);
-                $player->sendMessage(str_replace("&", "§", $this->cfg["limit-reached"] ?? "&cYou can't stack anymore orespawners, you have reached the limit"));
-                return;
-            }
+            
+            if (!in_array($item->getId(), $blocks)) return $player->sendMessage("§aThere are currently " . TF::YELLOW . $stacked. " §astacked OreSpawners");
+            if ($event->getBlock()->getId() != $item->getId()) return $player->sendMessage("§cPlease hold the right type of OreSpawner to stack");
+            if ($stacked >= intval($this->cfg["max"])) return $player->sendMessage(str_replace("&", "§", $this->cfg["limit-reached"] ?? "&cYou can't stack anymore orespawners, you have reached the limit"));
+            
             $tile->setData("stacked", $stacked + 1);
-            $event->setCancelled(true);
             $item->setCount($item->getCount() - 1);
             $player->getInventory()->setItem($player->getInventory()->getHeldItemIndex(), $item);
             $player->sendMessage(str_replace("&", "§", $this->cfg["gen-added"] ?? "&aSuccessfully stacked a orespawner"));
