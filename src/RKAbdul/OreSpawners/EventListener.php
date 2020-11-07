@@ -91,16 +91,17 @@ class EventListener implements Listener{
             array_push($blocks, $blockID);
         };
         if (in_array($event->getBlock()->getId(), $blocks)) {
+            if (!$item->getNamedTag()->hasTag("orespawner")) return;
             $tile = $event->getPlayer()->getLevel()->getTile($event->getBlock());
             if (!$tile instanceof SimpleTile) return;
-            $event->setCancelled(true);
             if($player->getGamemode() == 1) return $player->sendMessage(TF::RED . "You can only use stacking system in survival");
             $stacked = $tile instanceof SimpleTile ? $tile->getData("stacked")->getValue() : 1;
             
             if (!in_array($item->getId(), $blocks)) return $player->sendMessage("§aThere are currently " . TF::YELLOW . $stacked. " §astacked OreSpawners");
             if ($event->getBlock()->getId() != $item->getId()) return $player->sendMessage("§cPlease hold the right type of OreSpawner to stack");
             if ($stacked >= intval($this->cfg["max"])) return $player->sendMessage(str_replace("&", "§", $this->cfg["limit-reached"] ?? "&cYou can't stack anymore orespawners, you have reached the limit"));
-            
+            $event->setCancelled(true);
+
             $tile->setData("stacked", $stacked + 1);
             $item->setCount($item->getCount() - 1);
             $player->getInventory()->setItem($player->getInventory()->getHeldItemIndex(), $item);
@@ -110,11 +111,7 @@ class EventListener implements Listener{
     
     public function getDelay(Block $block) {
         $tile = $block->getLevel()->getTile($block->asVector3());
-        if ($tile instanceof SimpleTile) {
-            $stacked = $tile->getData("stacked")->getValue();
-        } else {
-            $stacked = 1;
-        }
+        $stacked = $tile->getData("stacked")->getValue();
         $base = intval($this->cfg["base-delay"]);
         $delay = ($base / $stacked) * 20;
         return $delay;
