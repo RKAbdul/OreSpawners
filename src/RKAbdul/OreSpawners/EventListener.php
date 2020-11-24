@@ -153,8 +153,10 @@ class EventListener implements Listener
                                 $item->setCount($item->getCount() - 1);
                                 $player->getInventory()->setItem($player->getInventory()->getHeldItemIndex(), $item);
                                 $player->sendMessage(str_replace("&", "§", $this->cfg["gen-added"] ?? "&aSuccessfully stacked a orespawner"));
+                                return true;
                             }
                             $player->sendMessage(str_replace("&", "§", $this->cfg["limit-reached"] ?? "&cYou can't stack anymore orespawners, you have reached the limit"));
+                            return false;
                         }
                         $player->sendMessage("§cPlease hold the right type of OreSpawner to stack");
                         return false;
