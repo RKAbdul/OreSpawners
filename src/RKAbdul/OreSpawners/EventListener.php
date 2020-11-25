@@ -4,19 +4,21 @@ declare(strict_types=1);
 
 namespace RKAbdul\OreSpawners;
 
-use DenielWorld\EzTiles\data\TileInfo;
-use DenielWorld\EzTiles\tile\SimpleTile;
 use pocketmine\block\Block;
-use pocketmine\event\block\BlockBreakEvent;
-use pocketmine\event\block\BlockPlaceEvent;
-use pocketmine\event\block\BlockUpdateEvent;
-use pocketmine\event\Listener;
-use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\tile\Tile;
 use pocketmine\level\sound\FizzSound;
 use pocketmine\math\Vector3;
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\utils\TextFormat as TF;
+
+use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerInteractEvent;
+use pocketmine\event\block\BlockBreakEvent;
+use pocketmine\event\block\BlockPlaceEvent;
+use pocketmine\event\block\BlockUpdateEvent;
+
+use DenielWorld\EzTiles\data\TileInfo;
+use DenielWorld\EzTiles\tile\SimpleTile;
 
 class EventListener implements Listener
 {
@@ -140,14 +142,13 @@ class EventListener implements Listener
             array_push($blocks, $blockID);
         }
         if (in_array($event->getBlock()->getId(), $blocks)) {
-            if (!$item->getNamedTag()->hasTag("orespawner")) return false;
             $tile = $event->getPlayer()->getLevel()->getTile($event->getBlock());
             if ($tile instanceof SimpleTile) {
                 if (!$player->getGamemode() == 1) {
                     $stacked = $tile->getData("stacked")->getValue();
-                    if (in_array($item->getId(), $blocks)) {
+                    if (in_array($item->getId(), $blocks) && $item->getNamedTag()->hasTag("orespawner")) {
                         if ($event->getBlock()->getId() == $item->getId()) {
-                            if (!$stacked >= intval($this->cfg["max"])) {
+                            if (!($stacked >= intval($this->cfg["max"]))) {
                                 $event->setCancelled(true);
                                 $tile->setData("stacked", $stacked + 1);
                                 $item->setCount($item->getCount() - 1);
