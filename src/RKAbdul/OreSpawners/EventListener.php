@@ -146,7 +146,7 @@ class EventListener implements Listener
                 if (!$player->getGamemode() == 1) {
                     $stacked = $tile->getData("stacked")->getValue();
                     if (in_array($item->getId(), $blocks)) {
-                        if (!$event->getBlock()->getId() != $item->getId()) {
+                        if ($event->getBlock()->getId() == $item->getId()) {
                             if (!$stacked >= intval($this->cfg["max"])) {
                                 $event->setCancelled(true);
                                 $tile->setData("stacked", $stacked + 1);
