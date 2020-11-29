@@ -3,7 +3,7 @@
 [![](https://poggit.pmmp.io/shield.state/OreSpawners)](https://poggit.pmmp.io/p/OreSpawners)
 [![](http://hits.xenoservers.net:4000/RKAbdul/OreSpawners.svg)](http://hits.xenoservers.net:4000/RKAbdul/OreSpawners.svg)
 
-A pocketmine plugin, for adding OreSpawners a.k.a OreGens to your server.
+A pocketmine plugin, for adding OreSpawners a.k.a OreGens to your server, that will create ores upon them when placed, and can be stacked for making them faster.
 # Installation
 Download the plugin from poggit release and/or poggit CI
 Put the .phar file, in your plugins folder and restart the server
