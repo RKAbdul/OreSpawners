@@ -87,7 +87,7 @@ class Main extends PluginBase
      *
      * @param  string $ore
      * @param  int $amount
-     * @return gencreated
+     * @return object
      */
     public function createOreSpawner(string $ore, int $amount)
     {

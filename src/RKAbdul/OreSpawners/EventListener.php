@@ -60,17 +60,17 @@ class EventListener implements Listener
         }
 
         if (in_array($bbelow->getId(), $blocks)) {
-            $tile = $event->getBlock()->getLevel()->getTile($bbelow);
+            $tile = $block->getLevel()->getTile($bbelow);
             if (!$tile instanceof SimpleTile) return;
             $ore = $this->checkBlock($bbelow);
             $delay = $this->getDelay($bbelow);
             if (!$event->isCancelled()) {
                 $event->setCancelled(true);
-                if ($event->getBlock()->getId() == $ore->getId()) return;
+                if ($block->getId() == $ore->getId()) return;
                 $this->plugin->getScheduler()->scheduleDelayedTask(new ClosureTask(function (int $currentTick) use ($event, $ore): void {
-                    if ($event->getBlock()->getLevel() !== null) {
-                        $event->getBlock()->getLevel()->setBlock($event->getBlock()->floor(), $ore, false, true);
-                        if ($this->cfg["fizz-sound"] == true) $event->getBlock()->getLevel()->addSound(new FizzSound($event->getBlock()->asVector3()));
+                    if ($block->getLevel() !== null) {
+                        $block->getLevel()->setBlock($block->floor(), $ore, false, true);
+                        if ($this->cfg["fizz-sound"] == true) $block->getLevel()->addSound(new FizzSound($block->asVector3()));
                     }
                 }), intval($delay));
             }
@@ -193,7 +193,7 @@ class EventListener implements Listener
      * Checks the OreSpawner spawning block type.
      *
      * @param  Block $bbelow
-     * @return ore|bool
+     * @return object|bool
      */
     public function checkBlock(Block $bbelow)
     {
@@ -238,7 +238,7 @@ class EventListener implements Listener
      * Checks the OreSpawner type.
      *
      * @param  Block $bbelow
-     * @return ore|bool
+     * @return object|bool
      */
     public function checkSpawner(Block $bbelow)
     {
@@ -288,6 +288,7 @@ class EventListener implements Listener
     public function getDelay(Block $block)
     {
         $tile = $block->getLevel()->getTile($block->asVector3());
+        /** @phpstan-ignore-next-line */
         $stacked = $tile->getData("stacked")->getValue();
         $base = intval($this->cfg["base-delay"]);
         return ($base / $stacked) * 20;
@@ -301,6 +302,7 @@ class EventListener implements Listener
      */
     public function getTile(Vector3 $pos): ?Tile
     {
+        /** @phpstan-ignore-next-line */
         return $this->getTileAt((int)floor($pos->x), (int)floor($pos->y), (int)floor($pos->z));
     }
 }
