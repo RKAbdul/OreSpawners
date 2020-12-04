@@ -146,7 +146,7 @@ class EventListener implements Listener
             if ($tile instanceof SimpleTile) {
                 if (!$player->getGamemode() == 1) {
                     $stacked = $tile->getData("stacked")->getValue();
-                    if (in_array($item->getId(), $blocks) && $item->getNamedTag()->hasTag("orespawner")) {
+                    if ($item->getNamedTag()->hasTag("orespawner")) {
                         if ($event->getBlock()->getId() == $item->getId()) {
                             if (!($stacked >= intval($this->cfg["max"]))) {
                                 $event->setCancelled(true);
