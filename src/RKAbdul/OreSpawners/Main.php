@@ -20,28 +20,37 @@ class Main extends PluginBase
     public const VERSION = 4;
 
     private $cfg;
-
+    
+    /**
+     * Disables the plugin if config version is below const VERSION.
+     *
+     * @return void
+     */
     public function onEnable()
     {
-        if (!file_exists($this->getDataFolder())) {
-            @mkdir($this->getDataFolder());
-        } else if (!file_exists($this->getDataFolder() . "config.yml")) {
-            $this->getLogger()->info("Config Not Found! Creating new config...");
-            $this->saveDefaultConfig();
-        }
         $this->cfg = $this->getConfig()->getAll();
+
         if ($this->cfg["version"] < self::VERSION) {
             $this->getLogger()->error("Config Version is outdated! Please delete your current config file!");
             $this->getServer()->getPluginManager()->disablePlugin($this);
         }
+
         $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
         EzTiles::register($this);
         EzTiles::init();
     }
-
+    
+    /**
+     * Checks if the OreSpawner command is run.
+     *
+     * @param  mixed $sender
+     * @param  mixed $command
+     * @param  mixed $label
+     * @param  mixed $args
+     * @return bool
+     */
     public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool
     {
-
         if ($command->getName() === "orespawner") {
             $typesArray = ["coal", "lapis", "iron", "gold", "diamond", "emerald", "redstone"];
             if (!$sender->hasPermission("orespawner.give")) {
@@ -72,7 +81,14 @@ class Main extends PluginBase
         }
         return false;
     }
-
+    
+    /**
+     * Creates OreSpawners from given arguments.
+     *
+     * @param  mixed $ore
+     * @param  mixed $amount
+     * @return gencreated
+     */
     public function createOreSpawner(string $ore, int $amount)
     {
         $gen = $this->cfg["ore-generator-blocks"][$ore];

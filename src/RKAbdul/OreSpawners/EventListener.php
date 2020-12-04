@@ -29,13 +29,26 @@ class EventListener implements Listener
     private $plugin;
 
     private $cfg;
-
+    
+    /**
+     * Initialize objects.
+     *
+     * @param  mixed $plugin
+     * @return void
+     */
     public function __construct(Main $plugin)
     {
         $this->plugin = $plugin;
         $this->cfg = $this->plugin->getConfig()->getAll();
     }
 
+    /**
+     * Checks if a block is updated and if it is an OreSpawner.
+     * If so, a new ore will be created.
+     *
+     * @param  mixed $event
+     * @return void
+     */
     public function onBlockUpdate(BlockUpdateEvent $event)
     {
         $block = $event->getBlock();
@@ -63,54 +76,14 @@ class EventListener implements Listener
             }
         }
     }
-
-    public function checkBlock(Block $bbelow)
-    {
-        $bbid = $bbelow->getId();
-        $coalid = intval($this->cfg["ore-generator-blocks"]["coal"]);
-        $ironid = intval($this->cfg["ore-generator-blocks"]["iron"]);
-        $goldid = intval($this->cfg["ore-generator-blocks"]["gold"]);
-        $diamondid = intval($this->cfg["ore-generator-blocks"]["diamond"]);
-        $emeraldid = intval($this->cfg["ore-generator-blocks"]["emerald"]);
-        $lapizid = intval($this->cfg["ore-generator-blocks"]["lapis"]);
-        $redstoneid = intval($this->cfg["ore-generator-blocks"]["redstone"]);
-        switch ($bbid) {
-            case $coalid:
-                $ore = Block::get(Block::COAL_ORE);
-                break;
-            case $ironid:
-                $ore = Block::get(Block::IRON_ORE);
-                break;
-            case $goldid:
-                $ore = Block::get(Block::GOLD_ORE);
-                break;
-            case $diamondid:
-                $ore = Block::get(Block::DIAMOND_ORE);
-                break;
-            case $emeraldid:
-                $ore = Block::get(Block::EMERALD_ORE);
-                break;
-            case $lapizid:
-                $ore = Block::get(Block::LAPIS_ORE);
-                break;
-            case $redstoneid:
-                $ore = Block::get(Block::REDSTONE_ORE);
-                break;
-        }
-        if (isset($ore)) {
-            return $ore;
-        }
-        return false;
-    }
-
-    public function getDelay(Block $block)
-    {
-        $tile = $block->getLevel()->getTile($block->asVector3());
-        $stacked = $tile->getData("stacked")->getValue();
-        $base = intval($this->cfg["base-delay"]);
-        return ($base / $stacked) * 20;
-    }
-
+    
+    /**
+     * Checks if a block is placed and if it is an OreSpawner.
+     * If so, a new tile is created.
+     *
+     * @param  mixed $event
+     * @return void
+     */
     public function onBlockPlace(BlockPlaceEvent $event)
     {
         $block = $event->getBlock();
@@ -132,6 +105,49 @@ class EventListener implements Listener
         }
     }
 
+    /**
+     * Checks if a block is broken and if it is an OreSpawner.
+     * If so, the player gets back their OreSpawner(s).
+     *
+     * @param  mixed $event
+     * @return void
+     */
+    public function onBlockBreak(BlockBreakEvent $event)
+    {
+        $player = $event->getPlayer();
+        $block = $event->getBlock();
+        $bbelow = $block->getLevel()->getBlock($event->getBlock()->floor()->down(1));
+        $blocks = [];
+        foreach (array_values($this->plugin->getConfig()->get("ore-generator-blocks")) as $blockID) {
+            array_push($blocks, $blockID);
+        }
+        if ($event->isCancelled()) return;
+        if (in_array($event->getBlock()->getId(), $blocks)) {
+            $tile = $event->getBlock()->getLevel()->getTile($block);
+            if (!$tile instanceof SimpleTile) return;
+            $tile = $player->getLevel()->getTile($block->asVector3());
+            $type = $this->checkSpawner($block);
+            $count = $tile instanceof SimpleTile ? $tile->getData("stacked")->getValue() : 1;
+            $orespawner = $this->plugin->createOreSpawner($type, $count);
+            $drops = array();
+            $drops[] = $orespawner;
+            $event->setDrops($drops);
+        } else if (in_array($bbelow->getId(), $blocks)) {
+            if ($this->cfg["drop-xp"] == false) {
+                $event->setXpDropAmount(0);
+            }
+        }
+    }
+    
+    /**
+     * Checks if a player has interacted and if the interacted
+     * block is an OreSpawner through tiles. If so, OreSpawners
+     * can be stacked and/or OreSpawners in the block can be
+     * checked.
+     *
+     * @param  mixed $event
+     * @return bool
+     */
     public function onPlayerInteract(PlayerInteractEvent $event): bool
     {
         if ($this->cfg["stacking"] == false || $event->isCancelled()) return false;
@@ -173,38 +189,57 @@ class EventListener implements Listener
         return false;
     }
 
-    public function getTile(Vector3 $pos): ?Tile
+    /**
+     * Checks the OreSpawner spawning block type.
+     *
+     * @param  mixed $bbelow
+     * @return ore|bool
+     */
+    public function checkBlock(Block $bbelow)
     {
-        return $this->getTileAt((int)floor($pos->x), (int)floor($pos->y), (int)floor($pos->z));
-    }
-
-    public function onBlockBreak(BlockBreakEvent $event)
-    {
-        $player = $event->getPlayer();
-        $block = $event->getBlock();
-        $bbelow = $block->getLevel()->getBlock($event->getBlock()->floor()->down(1));
-        $blocks = [];
-        foreach (array_values($this->plugin->getConfig()->get("ore-generator-blocks")) as $blockID) {
-            array_push($blocks, $blockID);
+        $bbid = $bbelow->getId();
+        $coalid = intval($this->cfg["ore-generator-blocks"]["coal"]);
+        $ironid = intval($this->cfg["ore-generator-blocks"]["iron"]);
+        $goldid = intval($this->cfg["ore-generator-blocks"]["gold"]);
+        $diamondid = intval($this->cfg["ore-generator-blocks"]["diamond"]);
+        $emeraldid = intval($this->cfg["ore-generator-blocks"]["emerald"]);
+        $lapizid = intval($this->cfg["ore-generator-blocks"]["lapis"]);
+        $redstoneid = intval($this->cfg["ore-generator-blocks"]["redstone"]);
+        switch ($bbid) {
+            case $coalid:
+                $ore = Block::get(Block::COAL_ORE);
+                break;
+            case $ironid:
+                $ore = Block::get(Block::IRON_ORE);
+                break;
+            case $goldid:
+                $ore = Block::get(Block::GOLD_ORE);
+                break;
+            case $diamondid:
+                $ore = Block::get(Block::DIAMOND_ORE);
+                break;
+            case $emeraldid:
+                $ore = Block::get(Block::EMERALD_ORE);
+                break;
+            case $lapizid:
+                $ore = Block::get(Block::LAPIS_ORE);
+                break;
+            case $redstoneid:
+                $ore = Block::get(Block::REDSTONE_ORE);
+                break;
         }
-        if ($event->isCancelled()) return;
-        if (in_array($event->getBlock()->getId(), $blocks)) {
-            $tile = $event->getBlock()->getLevel()->getTile($block);
-            if (!$tile instanceof SimpleTile) return;
-            $tile = $player->getLevel()->getTile($block->asVector3());
-            $type = $this->checkSpawner($block);
-            $count = $tile instanceof SimpleTile ? $tile->getData("stacked")->getValue() : 1;
-            $orespawner = $this->plugin->createOreSpawner($type, $count);
-            $drops = array();
-            $drops[] = $orespawner;
-            $event->setDrops($drops);
-        } else if (in_array($bbelow->getId(), $blocks)) {
-            if ($this->cfg["drop-xp"] == false) {
-                $event->setXpDropAmount(0);
-            }
+        if (isset($ore)) {
+            return $ore;
         }
+        return false;
     }
-
+    
+    /**
+     * Checks the OreSpawner type.
+     *
+     * @param  mixed $bbelow
+     * @return ore|bool
+     */
     public function checkSpawner(Block $bbelow)
     {
         $bbid = $bbelow->getId();
@@ -242,5 +277,30 @@ class EventListener implements Listener
             return $ore;
         }
         return false;
+    }
+
+    /**
+     * Calculates delay till the next ore spawns.
+     *
+     * @param  mixed $block
+     * @return int
+     */
+    public function getDelay(Block $block)
+    {
+        $tile = $block->getLevel()->getTile($block->asVector3());
+        $stacked = $tile->getData("stacked")->getValue();
+        $base = intval($this->cfg["base-delay"]);
+        return ($base / $stacked) * 20;
+    }
+    
+    /**
+     * Returns the tile from a Vector3 position.
+     *
+     * @param  mixed $pos
+     * @return Tile
+     */
+    public function getTile(Vector3 $pos): ?Tile
+    {
+        return $this->getTileAt((int)floor($pos->x), (int)floor($pos->y), (int)floor($pos->z));
     }
 }
