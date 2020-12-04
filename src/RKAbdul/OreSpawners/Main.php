@@ -43,10 +43,10 @@ class Main extends PluginBase
     /**
      * Checks if the OreSpawner command is run.
      *
-     * @param  mixed $sender
-     * @param  mixed $command
-     * @param  mixed $label
-     * @param  mixed $args
+     * @param  CommandSender $sender
+     * @param  Command $command
+     * @param  string $label
+     * @param  array $args
      * @return bool
      */
     public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool
@@ -85,8 +85,8 @@ class Main extends PluginBase
     /**
      * Creates OreSpawners from given arguments.
      *
-     * @param  mixed $ore
-     * @param  mixed $amount
+     * @param  string $ore
+     * @param  int $amount
      * @return gencreated
      */
     public function createOreSpawner(string $ore, int $amount)

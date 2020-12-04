@@ -33,7 +33,7 @@ class EventListener implements Listener
     /**
      * Initialize objects.
      *
-     * @param  mixed $plugin
+     * @param  Main $plugin
      * @return void
      */
     public function __construct(Main $plugin)
@@ -46,7 +46,7 @@ class EventListener implements Listener
      * Checks if a block is updated and if it is an OreSpawner.
      * If so, a new ore will be created.
      *
-     * @param  mixed $event
+     * @param  BlockUpdateEvent $event
      * @return void
      */
     public function onBlockUpdate(BlockUpdateEvent $event)
@@ -81,7 +81,7 @@ class EventListener implements Listener
      * Checks if a block is placed and if it is an OreSpawner.
      * If so, a new tile is created.
      *
-     * @param  mixed $event
+     * @param  BlockPlaceEvent $event
      * @return void
      */
     public function onBlockPlace(BlockPlaceEvent $event)
@@ -109,7 +109,7 @@ class EventListener implements Listener
      * Checks if a block is broken and if it is an OreSpawner.
      * If so, the player gets back their OreSpawner(s).
      *
-     * @param  mixed $event
+     * @param  BlockBreakEvent $event
      * @return void
      */
     public function onBlockBreak(BlockBreakEvent $event)
@@ -145,7 +145,7 @@ class EventListener implements Listener
      * can be stacked and/or OreSpawners in the block can be
      * checked.
      *
-     * @param  mixed $event
+     * @param  PlayerInteractEvent $event
      * @return bool
      */
     public function onPlayerInteract(PlayerInteractEvent $event): bool
@@ -192,7 +192,7 @@ class EventListener implements Listener
     /**
      * Checks the OreSpawner spawning block type.
      *
-     * @param  mixed $bbelow
+     * @param  Block $bbelow
      * @return ore|bool
      */
     public function checkBlock(Block $bbelow)
@@ -237,7 +237,7 @@ class EventListener implements Listener
     /**
      * Checks the OreSpawner type.
      *
-     * @param  mixed $bbelow
+     * @param  Block $bbelow
      * @return ore|bool
      */
     public function checkSpawner(Block $bbelow)
@@ -282,7 +282,7 @@ class EventListener implements Listener
     /**
      * Calculates delay till the next ore spawns.
      *
-     * @param  mixed $block
+     * @param  Block $block
      * @return int
      */
     public function getDelay(Block $block)
@@ -296,7 +296,7 @@ class EventListener implements Listener
     /**
      * Returns the tile from a Vector3 position.
      *
-     * @param  mixed $pos
+     * @param  Vector3 $pos
      * @return Tile
      */
     public function getTile(Vector3 $pos): ?Tile
