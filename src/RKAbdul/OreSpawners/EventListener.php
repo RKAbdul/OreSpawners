@@ -60,17 +60,17 @@ class EventListener implements Listener
         }
 
         if (in_array($bbelow->getId(), $blocks)) {
-            $tile = $block->getLevel()->getTile($bbelow);
+            $tile = $event->getBlock()->getLevel()->getTile($bbelow);
             if (!$tile instanceof SimpleTile) return;
             $ore = $this->checkBlock($bbelow);
             $delay = $this->getDelay($bbelow);
             if (!$event->isCancelled()) {
                 $event->setCancelled(true);
-                if ($block->getId() == $ore->getId()) return;
+                if ($event->getBlock()->getId() == $ore->getId()) return;
                 $this->plugin->getScheduler()->scheduleDelayedTask(new ClosureTask(function (int $currentTick) use ($event, $ore): void {
-                    if ($block->getLevel() !== null) {
-                        $block->getLevel()->setBlock($block->floor(), $ore, false, true);
-                        if ($this->cfg["fizz-sound"] == true) $block->getLevel()->addSound(new FizzSound($block->asVector3()));
+                    if ($event->getBlock()->getLevel() !== null) {
+                        $event->getBlock()->getLevel()->setBlock($event->getBlock()->floor(), $ore, false, true);
+                        if ($this->cfg["fizz-sound"] == true) $event->getBlock()->getLevel()->addSound(new FizzSound($event->getBlock()->asVector3()));
                     }
                 }), intval($delay));
             }
@@ -238,7 +238,7 @@ class EventListener implements Listener
      * Checks the OreSpawner type.
      *
      * @param  Block $bbelow
-     * @return object|bool
+     * @return string|bool
      */
     public function checkSpawner(Block $bbelow)
     {
