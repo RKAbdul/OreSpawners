@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace RKAbdul\OreSpawners;
 
+use pocketmine\level\sound\FizzSound;
 use pocketmine\block\Block;
 use pocketmine\tile\Tile;
-use pocketmine\level\sound\FizzSound;
 use pocketmine\math\Vector3;
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\utils\TextFormat as TF;
+use pocketmine\Server;
 
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerInteractEvent;
@@ -75,7 +76,7 @@ class EventListener implements Listener
                 if ($event->getBlock()->getId() == $ore->getId()) return;
                 $this->plugin->getScheduler()->scheduleDelayedTask(new ClosureTask(function (int $currentTick) use ($event, $ore): void {
                     if ($event->getBlock()->getLevel() !== null) {
-                        Server::getInstance()->getPluginManager()->callEvent(new OreSpawnerGenerateEvent($tile, $event->getBlock()));
+                        Server::getInstance()->getPluginManager()->callEvent(new OreSpawnerGenerateEvent($event->getBlock()->getLevel()->getTile($bbelow), $event->getBlock()));
                         $event->getBlock()->getLevel()->setBlock($event->getBlock()->floor(), $ore, false, true);
                         if ($this->cfg["fizz-sound"] == true) $event->getBlock()->getLevel()->addSound(new FizzSound($event->getBlock()->asVector3()));
                     }

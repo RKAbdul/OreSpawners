@@ -7,6 +7,8 @@ namespace RKAbdul\OreSpawners\Events;
 use pocketmine\event\plugin\PluginEvent;
 use pocketmine\Player;
 
+use RKAbdul\OreSpawners\Main;
+
 use DenielWorld\EzTiles\EzTiles;
 use DenielWorld\EzTiles\tile\SimpleTile;
 
@@ -29,7 +31,7 @@ class OreSpawnerEvent extends PluginEvent
      * @param  Player $player
      * @return void
      */
-    public function __construct(SimpleTile $spawnerTile, Player $player)
+    public function __construct(SimpleTile $spawnerTile, $player)
     {
         $this->spawnerTile = $spawnerTile;
         $this->player = $player;
@@ -42,7 +44,7 @@ class OreSpawnerEvent extends PluginEvent
      *
      * @return Player
      */
-    public function getPlayer(): Player
+    public function getPlayer() 
     {
         return $this->player;
     }
