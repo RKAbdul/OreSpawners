@@ -20,7 +20,9 @@ use pocketmine\event\block\BlockUpdateEvent;
 use DenielWorld\EzTiles\data\TileInfo;
 use DenielWorld\EzTiles\tile\SimpleTile;
 
+use RKAbdul\OreSpawners\Events\OreSpawnerGenerateEvent;
 use RKAbdul\OreSpawners\Events\OreSpawnerStackEvent;
+use RKAbdul\OreSpawners\Events\OreSpawnerPlaceEvent;
 use RKAbdul\OreSpawners\Events\OreSpawnerBreakEvent;
 
 class EventListener implements Listener
@@ -73,6 +75,7 @@ class EventListener implements Listener
                 if ($event->getBlock()->getId() == $ore->getId()) return;
                 $this->plugin->getScheduler()->scheduleDelayedTask(new ClosureTask(function (int $currentTick) use ($event, $ore): void {
                     if ($event->getBlock()->getLevel() !== null) {
+                        Server::getInstance()->getPluginManager()->callEvent(new OreSpawnerGenerateEvent($tile, $event->getBlock()));
                         $event->getBlock()->getLevel()->setBlock($event->getBlock()->floor(), $ore, false, true);
                         if ($this->cfg["fizz-sound"] == true) $event->getBlock()->getLevel()->addSound(new FizzSound($event->getBlock()->asVector3()));
                     }
@@ -102,6 +105,7 @@ class EventListener implements Listener
             if ($item->getNamedTag()->hasTag("orespawner")) {
                 $tile = $event->getPlayer()->getLevel()->getTile($event->getBlock()->asVector3());
                 if (!$tile instanceof SimpleTile) {
+                    Server::getInstance()->getPluginManager()->callEvent(new OreSpawnerPlaceEvent($event->getPlayer(), $tile, 1));
                     $tileinfo = new TileInfo($event->getBlock(), ["id" => "simpleTile", "stacked" => 1]);
                     new SimpleTile($event->getPlayer()->getLevel(), $tileinfo);
                 }
@@ -170,11 +174,11 @@ class EventListener implements Listener
                     if ($item->getNamedTag()->hasTag("orespawner")) {
                         if ($event->getBlock()->getId() == $item->getId()) {
                             if (!($stacked >= intval($this->cfg["max"]))) {
+                                Server::getInstance()->getPluginManager()->callEvent(new OreSpawnerStackEvent($player, $tile, 1));
                                 $event->setCancelled(true);
                                 $tile->setData("stacked", $stacked + 1);
                                 $item->setCount($item->getCount() - 1);
                                 $player->getInventory()->setItem($player->getInventory()->getHeldItemIndex(), $item);
-                                Server::getInstance()->getPluginManager()->callEvent(new OreSpawnerStackEvent($player, $tile, 1));
                                 $player->sendMessage(str_replace("&", "§", $this->cfg["gen-added"] ?? "&aSuccessfully stacked a orespawner"));
                                 return true;
                             }

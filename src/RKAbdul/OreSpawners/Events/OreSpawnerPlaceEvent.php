@@ -10,7 +10,7 @@ use pocketmine\Player;
 use DenielWorld\EzTiles\EzTiles;
 use DenielWorld\EzTiles\tile\SimpleTile;
 
-class OreSpawnerStackEvent extends OreSpawnerEvent implements Cancellable
+class OreSpawnerPlaceEvent extends OreSpawnerEvent implements Cancellable
 {
     /**
      * @var int

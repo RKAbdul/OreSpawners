@@ -25,14 +25,14 @@ class OreSpawnerEvent extends PluginEvent
     /**
      * Initialize objects.
      *
-     * @param  Player $player
      * @param  SimpleTile $spawnerTile
+     * @param  Player $player
      * @return void
      */
-    public function __construct(Player $player, SimpleTile $spawnerTile)
+    public function __construct(SimpleTile $spawnerTile, Player $player)
     {
-        $this->player = $player;
         $this->spawnerTile = $spawnerTile;
+        $this->player = $player;
 
         parent::__construct(Main::getInstance());
     }

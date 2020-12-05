@@ -29,7 +29,7 @@ class OreSpawnerBreakEvent extends OreSpawnerEvent implements Cancellable
     {
         $this->count = $count;
 
-        parent::__construct($player, $spawnerTile);
+        parent::__construct($spawnerTile, $player);
     }
     
     /**
