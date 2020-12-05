@@ -20,6 +20,9 @@ use pocketmine\event\block\BlockUpdateEvent;
 use DenielWorld\EzTiles\data\TileInfo;
 use DenielWorld\EzTiles\tile\SimpleTile;
 
+use RKAbdul\OreSpawners\Events\OreSpawnerStackEvent;
+use RKAbdul\OreSpawners\Events\OreSpawnerBreakEvent;
+
 class EventListener implements Listener
 {
 
@@ -130,6 +133,7 @@ class EventListener implements Listener
             $type = $this->checkSpawner($block);
             $count = $tile instanceof SimpleTile ? $tile->getData("stacked")->getValue() : 1;
             $orespawner = $this->plugin->createOreSpawner($type, $count);
+            Server::getInstance()->getPluginManager()->callEvent(new OreSpawnerBreakEvent($player, $tile, $count));
             $drops = array();
             $drops[] = $orespawner;
             $event->setDrops($drops);
@@ -170,6 +174,7 @@ class EventListener implements Listener
                                 $tile->setData("stacked", $stacked + 1);
                                 $item->setCount($item->getCount() - 1);
                                 $player->getInventory()->setItem($player->getInventory()->getHeldItemIndex(), $item);
+                                Server::getInstance()->getPluginManager()->callEvent(new OreSpawnerStackEvent($player, $tile, 1));
                                 $player->sendMessage(str_replace("&", "§", $this->cfg["gen-added"] ?? "&aSuccessfully stacked a orespawner"));
                                 return true;
                             }

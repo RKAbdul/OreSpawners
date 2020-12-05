@@ -12,8 +12,6 @@ use pocketmine\nbt\tag\StringTag;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\TextFormat as TF;
-use function file_exists;
-use function mkdir;
 
 class Main extends PluginBase
 {
