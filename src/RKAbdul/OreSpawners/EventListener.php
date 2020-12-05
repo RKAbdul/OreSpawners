@@ -76,7 +76,8 @@ class EventListener implements Listener
                 if ($event->getBlock()->getId() == $ore->getId()) return;
                 $this->plugin->getScheduler()->scheduleDelayedTask(new ClosureTask(function (int $currentTick) use ($event, $ore): void {
                     if ($event->getBlock()->getLevel() !== null) {
-                        Server::getInstance()->getPluginManager()->callEvent(new OreSpawnerGenerateEvent($event->getBlock()->getLevel()->getTile($bbelow), $event->getBlock()));
+                        /** @phpstan-ignore-next-line */
+                        Server::getInstance()->getPluginManager()->callEvent(new OreSpawnerGenerateEvent($tile, $event->getBlock()));
                         $event->getBlock()->getLevel()->setBlock($event->getBlock()->floor(), $ore, false, true);
                         if ($this->cfg["fizz-sound"] == true) $event->getBlock()->getLevel()->addSound(new FizzSound($event->getBlock()->asVector3()));
                     }

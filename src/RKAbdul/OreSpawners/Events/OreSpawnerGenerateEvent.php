@@ -14,7 +14,7 @@ use DenielWorld\EzTiles\tile\SimpleTile;
 class OreSpawnerGenerateEvent extends OreSpawnerEvent implements Cancellable
 {
     /**
-     * @var object
+     * @var Block
      */
     private $block;
         
@@ -22,7 +22,7 @@ class OreSpawnerGenerateEvent extends OreSpawnerEvent implements Cancellable
      * Initialize objects.
      *
      * @param  SimpleTile $spawnerTile
-     * @param  object $block
+     * @param  Block $block
      * @return void
      */
     public function __construct(SimpleTile $spawnerTile, Block $block)
@@ -35,7 +35,7 @@ class OreSpawnerGenerateEvent extends OreSpawnerEvent implements Cancellable
     /**
      * getBlock
      *
-     * @return object
+     * @return Block
      */
     public function getBlock(): Block
     {

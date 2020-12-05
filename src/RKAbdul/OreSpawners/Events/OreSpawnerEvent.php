@@ -35,7 +35,8 @@ class OreSpawnerEvent extends PluginEvent
     {
         $this->spawnerTile = $spawnerTile;
         $this->player = $player;
-
+        
+        /** @phpstan-ignore-next-line */
         parent::__construct(Main::getInstance());
     }
     
