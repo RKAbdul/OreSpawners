@@ -39,7 +39,7 @@ class EventListener implements Listener
     public function onBlockUpdate(BlockUpdateEvent $event)
     {
         $block = $event->getBlock();
-        $bbelow = $block->getLevel()->getBlock($event->getBlock()->floor()->down(1));
+        $bbelow = $block->getLevelNonNull()->getBlock($event->getBlock()->floor()->down(1));
         $blocks = [];
 
         foreach (array_values($this->plugin->getConfig()->get("ore-generator-blocks")) as $blockID) {
@@ -47,7 +47,7 @@ class EventListener implements Listener
         }
 
         if (in_array($bbelow->getId(), $blocks)) {
-            $tile = $event->getBlock()->getLevel()->getTile($bbelow);
+            $tile = $event->getBlock()->getLevelNonNull()->getTile($bbelow);
             if (!$tile instanceof SimpleTile) return;
             $ore = $this->checkBlock($bbelow);
             $delay = $this->getDelay($bbelow);
@@ -55,9 +55,9 @@ class EventListener implements Listener
                 $event->setCancelled(true);
                 if ($event->getBlock()->getId() == $ore->getId()) return;
                 $this->plugin->getScheduler()->scheduleDelayedTask(new ClosureTask(function (int $currentTick) use ($event, $ore): void {
-                    if ($event->getBlock()->getLevel() !== null) {
-                        $event->getBlock()->getLevel()->setBlock($event->getBlock()->floor(), $ore, false, true);
-                        if ($this->cfg["fizz-sound"] == true) $event->getBlock()->getLevel()->addSound(new FizzSound($event->getBlock()->asVector3()));
+                    if ($event->getBlock()->getLevelNonNull() !== null) {
+                        $event->getBlock()->getLevelNonNull()->setBlock($event->getBlock()->floor(), $ore, false, true);
+                        if ($this->cfg["fizz-sound"] == true) $event->getBlock()->getLevelNonNull()->addSound(new FizzSound($event->getBlock()->asVector3()));
                     }
                 }), intval($delay));
             }
@@ -105,7 +105,8 @@ class EventListener implements Listener
 
     public function getDelay(Block $block)
     {
-        $tile = $block->getLevel()->getTile($block->asVector3());
+        $tile = $block->getLevelNonNull()->getTile($block->asVector3());
+        if (!$tile instanceof SimpleTile) return;
         $stacked = $tile->getData("stacked")->getValue();
         $base = intval($this->cfg["base-delay"]);
         return ($base / $stacked) * 20;
@@ -123,16 +124,16 @@ class EventListener implements Listener
 
         if (in_array($block->getId(), $blocks)) {
             if ($item->getNamedTag()->hasTag("orespawner")) {
-                $tile = $event->getPlayer()->getLevel()->getTile($event->getBlock()->asVector3());
+                $tile = $event->getPlayer()->getLevelNonNull()->getTile($event->getBlock()->asVector3());
                 if (!$tile instanceof SimpleTile) {
                     $tileinfo = new TileInfo($event->getBlock(), ["id" => "simpleTile", "stacked" => 1]);
-                    new SimpleTile($event->getPlayer()->getLevel(), $tileinfo);
+                    new SimpleTile($event->getPlayer()->getLevelNonNull(), $tileinfo);
                 }
             }
         }
         
         $block = $event->getBlock();
-        $bbelow = $block->getLevel()->getBlock($event->getBlock()->floor()->down(1));
+        $bbelow = $block->getLevelNonNull()->getBlock($event->getBlock()->floor()->down(1));
         if ($this->checkBlock($bbelow)) {
             $event->setCancelled(true);
             $event->getPlayer()->sendMessage(Tf::RED . "You can not place blocks over an OreSpawner!");
@@ -149,7 +150,7 @@ class EventListener implements Listener
             array_push($blocks, $blockID);
         }
         if (in_array($event->getBlock()->getId(), $blocks)) {
-            $tile = $event->getPlayer()->getLevel()->getTile($event->getBlock());
+            $tile = $event->getPlayer()->getLevelNonNull()->getTile($event->getBlock());
             if ($tile instanceof SimpleTile) {
                 if (!$player->getGamemode() == 1) {
                     $stacked = $tile->getData("stacked")->getValue();
@@ -179,30 +180,25 @@ class EventListener implements Listener
         }
         return false;
     }
-
-    public function getTile(Vector3 $pos): ?Tile
-    {
-        return $this->getTileAt((int)floor($pos->x), (int)floor($pos->y), (int)floor($pos->z));
-    }
-
+    
     public function onBlockBreak(BlockBreakEvent $event)
     {
         $player = $event->getPlayer();
         $block = $event->getBlock();
-        $bbelow = $block->getLevel()->getBlock($event->getBlock()->floor()->down(1));
+        $bbelow = $block->getLevelNonNull()->getBlock($event->getBlock()->floor()->down(1));
         $blocks = [];
         foreach (array_values($this->plugin->getConfig()->get("ore-generator-blocks")) as $blockID) {
             array_push($blocks, $blockID);
         }
         if ($event->isCancelled()) return;
         if (in_array($event->getBlock()->getId(), $blocks)) {
-            $tile = $event->getBlock()->getLevel()->getTile($block);
+            $tile = $event->getBlock()->getLevelNonNull()->getTile($block);
             if (!$tile instanceof SimpleTile) return;
-            $tile = $player->getLevel()->getTile($block->asVector3());
+            $tile = $player->getLevelNonNull()->getTile($block->asVector3());
             $type = $this->checkSpawner($block);
             $count = $tile instanceof SimpleTile ? $tile->getData("stacked")->getValue() : 1;
             $orespawner = $this->plugin->createOreSpawner($type, $count);
-            $drops = array();
+            $drops = [];
             $drops[] = $orespawner;
             $event->setDrops($drops);
         } else if (in_array($bbelow->getId(), $blocks)) {
