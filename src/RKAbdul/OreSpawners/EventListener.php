@@ -17,8 +17,8 @@ use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\block\BlockUpdateEvent;
 
-use RKAbdul\OreSpawners\libs\DenielWorld\EzTiles\data\TileInfo;
-use RKAbdul\OreSpawners\libs\DenielWorld\EzTiles\tile\SimpleTile;
+use DenielWorld\EzTiles\data\TileInfo;
+use DenielWorld\EzTiles\tile\SimpleTile;
 
 class EventListener implements Listener
 {
