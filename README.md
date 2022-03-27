@@ -1,5 +1,4 @@
 # OreSpawners
-[![Discord Chat](https://img.shields.io/discord/490677165289897995.svg)](https://discord.gg/M7FA5D3)
 [![](https://poggit.pmmp.io/shield.state/OreSpawners)](https://poggit.pmmp.io/p/OreSpawners)
 [![](http://hits.xenoservers.net:4000/RKAbdul/OreSpawners.svg)](http://hits.xenoservers.net:4000/RKAbdul/OreSpawners.svg)
 
