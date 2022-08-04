@@ -1,8 +1,8 @@
 name: OreSpawners
-version: 0.5.3
+version: 0.6.0
 main: RKAbdul\OreSpawners\Main
 authors: [RKAbdul, AGTHARN]
-api: 3.0.0
+api: 4.0.0
 
 commands:
  orespawner:
